@@ -12,10 +12,16 @@ def client_request(client_socket: socket.socket) -> None:
     body: str = request_data[-1]
     request_method: str = request_data[0].split(" ")[0]
 
+    # TODO: find Content-Type from header(request_data) and send to each function
+    # TODO: Each response should contain Content-Type and Content-Length.
+
     if request_method == "GET":
         response: bytes = get_request_method(path, request_data)
 
     elif request_method == "POST":
+        response: bytes = post_request_method(path, body)
+
+    elif request_method == "PUT":
         response: bytes = post_request_method(path, body)
 
     elif request_method == "DELETE":
@@ -109,6 +115,21 @@ def post_request_method(path: str, body: str) -> bytes:
             return f"HTTP/1.1 404 Not Found\r\n\r\n".encode()
 
     return f"HTTP/1.1 400 Bad Request\r\n\r\n".encode()
+
+
+def put_request_method(path: str, body: str) -> bytes:
+    if path.startswith("/files"):
+        directory: str = sys.argv[2]
+        filename: str = path.split("/")[-1]
+        file_path: str = os.path.join(directory, filename)
+
+        try:
+            with open(file_path, "w") as file:
+                file.write(body)
+                return f"HTTP/1.1 200 OK\r\n\r\n".encode()
+
+        except FileNotFoundError as e:
+            return f"HTTP/1.1 404 Not Found\r\n\r\n".encode()
 
 
 def delete_request_method(path: str) -> bytes:

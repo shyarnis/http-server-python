@@ -1,6 +1,6 @@
 # HTTP Server
 
-A multi-threaded HTTP Sever using python socket library, capable of handling GET, POST and DELETE requests.
+A multi-threaded HTTP Sever using python socket library, capable of handling GET, POST, PUT and DELETE requests.
 
 ## Features
 
@@ -8,6 +8,7 @@ A multi-threaded HTTP Sever using python socket library, capable of handling GET
 -   **GET** /user-agent
 -   **GET** /files/{filename}
 -   **POST** /files/{filename}
+-   **PUT** /files/{filename}
 -   **DELETE** /files/{filename}
 -   Supports for the Accept-Encoding and Content-Encoding headers
 -   Supports gzip compression scheme
@@ -62,6 +63,20 @@ curl -v http://localhost:8000/files/some_file_123
 curl -v --data "12345" -H "Content-Type: application/octet-stream" http://localhost:8000/files/file_123
 ```
 
+-   Another Example
+
+```bash
+curl -v --data '{"title": "First Post", "author": "Ram Bahadur", "content": "This is new post"}' -H "Content-Type: application/json" http://localhost:8000/files/posts
+```
+
+#### PUT /files/{filename}
+
+-   Implement `PUT` method of the `/files/{filename}` endpoint, which replaces an existing file under that `--directory`
+
+```bash
+curl -v -X PUT -d '{"title": "Awesome Post", "author": "Ram Bahadur", "content": "This is updated post"}' -H "Content-Type: application/json" http://localhost:8000/files/posts
+```
+
 #### DELETE /files/{filename}
 
 -   Implement `DELETE` method of the `/files/{filename}` endpoint, which deletes an existing file under that `--directory`
@@ -92,3 +107,8 @@ curl -v -H "Accept-Encoding: gzip" http://localhost:8000/echo/any_string | hexdu
 -   To check that your compressed body is correct, you can run
     `echo -n <uncompressed-str> | gzip | hexdump -C`
     -   `<uncompressed-str>` can be any string after endpoint `/echo`
+
+## References
+
+-   [Build your own HTTP server](https://app.codecrafters.io/courses/http-server/overview)
+-   [About HTTP](https://http.dev/)
